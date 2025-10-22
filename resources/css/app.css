@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.collapse.show {
+    visibility: visible !important;
+}
+
+.navbar-brand {
+    font-size: xx-large !important;
+}
