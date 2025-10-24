@@ -1,5 +1,5 @@
 <x-layout>
-<div class="container text-right" dir="rtl">
+<div class="container-xl text-right" dir="rtl">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>تفاصيل عملية البيع (#{{ $sale->id }})</h2>
         <div class="text-left">

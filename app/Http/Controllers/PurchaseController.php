@@ -39,7 +39,7 @@ class PurchaseController extends Controller
     public function store(StorePurchaseRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-        
+
         DB::beginTransaction();
         try {
             // 1. إنشاء فاتورة الشراء الرئيسية
@@ -62,8 +62,20 @@ class PurchaseController extends Controller
                 if ($item) {
                     $item->stock_quantity += $itemData['quantity'];
                     // يمكنك أيضاً تحديث unit_price إذا لزم الأمر
-                    $item->unit_price = $itemData['unit_cost']; 
+                    $item->unit_price = $itemData['unit_cost'];
                     $item->save();
+
+                    // ** إضافة سجل حركة المخزون **
+                    \App\Models\StockMovement::create([
+                        'item_id' => $item->id,
+                        'movement_date' => $validated['purchase_date'],
+                        'movement_type' => 'IN',
+                        'quantity_change' => $itemData['quantity'],
+                        'reference_type' => 'Purchase',
+                        'reference_id' => $purchase->id,
+                        'reason' => 'Purchase Receipt',
+                        'current_stock' => $item->stock_quantity,
+                    ]);
                 }
             }
 
@@ -107,15 +119,19 @@ class PurchaseController extends Controller
     {
         // منطق التحديث معقد لأنه يتطلب التعامل مع حذف/إضافة/تعديل الأصناف وتحديث المخزون
         // *بشكل آمن* عكسياً. لهذا، يتم هنا عرض التحديث الجزئي.
-        
+
         DB::beginTransaction();
         try {
             // 1. تحديث فاتورة الشراء الرئيسية
             $purchase->update($request->only([
-                'supplier_id', 'purchase_date', 'invoice_number', 
-                'total_amount', 'status', 'notes'
+                'supplier_id',
+                'purchase_date',
+                'invoice_number',
+                'total_amount',
+                'status',
+                'notes'
             ]));
-            
+
             // NOTE: تحديث الأصناف وتعديل المخزون يتطلب منطقًا إضافيًا معقدًا
             // يعتمد على مقارنة الأصناف القديمة بالجديدة. 
 
@@ -137,7 +153,7 @@ class PurchaseController extends Controller
     public function destroy(Purchase $purchase): RedirectResponse
     {
         // يتطلب منطق عكس المخزون (ناقص الكميات المحذوفة) قبل الحذف الكامل.
-        
+
         // مثال على منطق عكس المخزون (يجب أن يتم داخل معاملة DB::transaction):
         /*
         foreach ($purchase->items as $purchaseItem) {
@@ -148,7 +164,7 @@ class PurchaseController extends Controller
             }
         }
         */
-        
+
         $purchase->delete();
 
         return redirect()->route('purchases.index')

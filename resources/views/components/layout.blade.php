@@ -16,17 +16,19 @@
     </style>
 </head>
 
-<body class="p-8" dir="rtl">
+<body dir="rtl">
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
+        <div class="container-xl ">
             <a class="navbar-brand" href="{{ route('/') }}">تجميل</a>
             <div class="float-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item"><a class="nav-link" href="{{ route('items.index') }}">الأصناف</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('stock_movements.index') }}">المخزون</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('suppliers.index') }}">الموردين</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('purchases.index') }}">مشتريات</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('sales.index') }}">مبيعات</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('returns.index') }}">مرتجعات</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('expenses.index') }}">المصروفات</a></li>
                 </ul>
             </div>

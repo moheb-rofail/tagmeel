@@ -37,7 +37,7 @@
                     @forelse ($items as $item)
                         <tr class="{{ $item->stock_quantity <= $item->reorder_point ? 'low-stock' : '' }}">
                             {{-- Alignment changed from text-left to text-right --}}
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-right">{{ $item->name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-right"><a href="{{ route('stock_movements.item_history', $item) }}">{{ $item->name }}</a></td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-bold {{ $item->stock_quantity <= $item->reorder_point ? 'text-red-700' : 'text-gray-700' }} text-right">
                                 {{ $item->stock_quantity }}
                             </td>

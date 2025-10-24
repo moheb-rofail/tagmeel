@@ -62,6 +62,18 @@ class SaleController extends Controller
                 if ($item) {
                     $item->stock_quantity -= $itemData['quantity'];
                     $item->save();
+
+                    // ** إضافة سجل حركة المخزون **
+                    \App\Models\StockMovement::create([
+                        'item_id' => $item->id,
+                        'movement_date' => $validated['sale_date'],
+                        'movement_type' => 'OUT',
+                        'quantity_change' => $itemData['quantity'],
+                        'reference_type' => 'Sale',
+                        'reference_id' => $sale->id,
+                        'reason' => 'Sale Transaction',
+                        'current_stock' => $item->stock_quantity,
+                    ]);
                 }
             }
 
@@ -104,15 +116,21 @@ class SaleController extends Controller
     {
         // منطق التحديث معقد لأنه يتطلب عكس تأثيرات المخزون القديمة وتطبيق تأثيرات جديدة.
         // لعرض الهيكل، سنقوم بتحديث الرأس فقط. يجب إضافة منطق معقد للأصناف والمخزون.
-        
+
         DB::beginTransaction();
         try {
             // تحديث فاتورة البيع الرئيسية
             $sale->update($request->only([
-                'customer_name', 'sale_date', 'invoice_number', 'total_amount', 
-                'discount_amount', 'final_amount', 'payment_method', 'notes'
+                'customer_name',
+                'sale_date',
+                'invoice_number',
+                'total_amount',
+                'discount_amount',
+                'final_amount',
+                'payment_method',
+                'notes'
             ]));
-            
+
             // NOTE: يجب هنا إضافة منطق تحديث أصناف SaleItem وتعديل المخزون بشكل آمن.
 
             DB::commit();
@@ -133,7 +151,7 @@ class SaleController extends Controller
     public function destroy(Sale $sale): RedirectResponse
     {
         // يتطلب منطق عكس المخزون (إضافة الكميات المحذوفة) قبل الحذف الكامل.
-        
+
         // مثال على منطق عكس المخزون (يجب أن يتم داخل معاملة DB::transaction):
         /*
         foreach ($sale->items as $saleItem) {
@@ -144,7 +162,7 @@ class SaleController extends Controller
             }
         }
         */
-        
+
         $sale->delete();
 
         return redirect()->route('sales.index')

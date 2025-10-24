@@ -166,7 +166,7 @@
 
         // 3. إضافة صف جديد
         $('#add-sale-item-row').on('click', function() {
-            const container = $('#sale-items-container');
+            const container-xl = $('#sale-items-container');
             
             // استخدام قالب JS بسيط لصف جديد
             let newRow = $(`

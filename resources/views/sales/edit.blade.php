@@ -1,5 +1,5 @@
 <x-layout>
-<div class="container text-right" dir="rtl">
+<div class="container-xl text-right" dir="rtl">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card shadow-sm">

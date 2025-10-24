@@ -1,5 +1,5 @@
 <x-layout>
-<div class="container text-right" dir="rtl">
+<div class="container-xl text-right" dir="rtl">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>قائمة فواتير المشتريات</h2>
         <a href="{{ route('purchases.create') }}" class="btn btn-primary">

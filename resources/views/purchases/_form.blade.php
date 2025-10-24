@@ -156,7 +156,7 @@
 
         // 3. إضافة صف جديد (إذا كنت تستخدم صفوفًا ديناميكية)
         $('#add-item-row').on('click', function() {
-            const container = $('#purchase-items-container');
+            const container-xl = $('#purchase-items-container');
 
         // استنساخ الصف الفارغ أو استخدام قالب Blade (الأفضل استخدام AJAX/JS template)
         // لتبسيط المثال: سنستخدم هنا منطقًا بسيطًا
