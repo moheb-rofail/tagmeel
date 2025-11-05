@@ -78,9 +78,11 @@ class SaleController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('sales.index')
-                ->with('success', 'تم تسجيل عملية البيع بنجاح وتحديث المخزون!');
+            // return redirect()->route('sales.index')
+                // ->with('success', 'تم تسجيل عملية البيع بنجاح وتحديث المخزون!');
 
+            // 4. التوجيه إلى صفحة الطباعة الحرارية
+            return redirect()->route('sales.print.thermal', $sale)->with('success', 'تم تسجيل عملية البيع بنجاح.');            
         } catch (\Exception $e) {
             DB::rollBack();
             // يجب تسجيل الخطأ هنا
@@ -88,6 +90,27 @@ class SaleController extends Controller
                 ->withInput()
                 ->with('error', 'فشل تسجيل عملية البيع. يرجى مراجعة التفاصيل.');
         }
+    }
+
+    /**
+     * يعرض عملية البيع ويجهزها للطباعة الحرارية.
+     */
+    public function printThermalSale($id) // لاحظ تغيير الاسم إلى Sale
+    {   
+        // يفضل استخدام Eager Loading لتقليل الاستعلامات
+        $sale = Sale::with('items.item')->findOrFail($id);
+
+        // Debug each relationship level
+    // dd([
+    //     'sale' => $sale->toArray(),
+    //     'items' => $sale->items->toArray(),
+    //     'first_item_details' => $sale->items->first() ? [
+    //         'item_data' => $sale->items->first()->item->toArray(),
+    //         'sale_item_data' => $sale->items->first()->toArray()
+    //     ] : null
+    // ]);
+        // عرض الـ Blade المصمم للطباعة الحرارية
+        return view('sales.thermal_print', compact('sale')); // لاحظ تغيير المجلد إلى sales
     }
 
     /**

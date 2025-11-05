@@ -31,7 +31,8 @@ Route::resource('expenses', ExpenseController::class);
 Route::resource('sales', SaleController::class);
 Route::resource('returns', StockReturnController::class);
 Route::resource('stock_movements', StockMovementController::class);
-Route::get('stock-movements/item/{item}', [StockMovementController::class, 'itemHistory'])
-    ->name('stock_movements.item_history');
-    
+Route::get('stock-movements/item/{item}', [StockMovementController::class, 'itemHistory'])->name('stock_movements.item_history');
+
+// مسار الطباعة الحرارية (استخدام اسم sale)
+Route::get('/sales/{sale}/print-thermal', [SaleController::class, 'printThermalSale'])->name('sales.print.thermal');
 require __DIR__.'/auth.php';
