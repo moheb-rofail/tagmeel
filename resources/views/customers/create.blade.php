@@ -1,0 +1,25 @@
+<x-layout>
+<div class="container text-right" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4>إضافة زبون/بائع جديد</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('customers.store') }}" method="POST">
+                        @csrf
+                        
+                        @include('customers._form')
+
+                        <div class="mt-4 text-left">
+                            <button type="submit" class="btn btn-success ms-2">حفظ الزبون</button>
+                            <a href="{{ route('customers.index') }}" class="btn btn-secondary">إلغاء</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</x-layout>

@@ -7,7 +7,7 @@
                     <h4>تسجيل عملية بيع جديدة</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('sales.store') }}" method="POST">
+                    <form action="{{ route('sales.store') }}" method="POST" id="saleForm" >
                         @csrf
                         {{-- تمرير الأصناف المتاحة لـ _form --}}
                         @include('sales._form', ['itemsList' => $items])

@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('stock_movements.index', absolute: false));
+        return redirect()->intended(route('stock_movements', absolute: false));
     }
 
     /**

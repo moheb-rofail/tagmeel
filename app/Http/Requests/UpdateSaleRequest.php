@@ -24,7 +24,6 @@ class UpdateSaleRequest extends FormRequest
             'total_amount' => ['required', 'numeric', 'min:0.01'],
             'discount_amount' => ['nullable', 'numeric', 'min:0', 'lte:total_amount'],
             'final_amount' => ['required', 'numeric', 'min:0.01', 'lte:total_amount'],
-            'payment_method' => ['required', 'string', 'max:50'],
             'notes' => ['nullable', 'string'],
 
             // حقول SaleItem (لبيانات الأصناف)

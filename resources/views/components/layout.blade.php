@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة الموردين</title>
+    <title><?=env('APP_NAME');?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
@@ -20,11 +20,12 @@
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-xl ">
-            <a class="navbar-brand" href="{{ route('/') }}">تجميل</a>
+            <a class="navbar-brand" href="{{ route('/') }}"><?=env('APP_NAME');?></a>
             <div class="float-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item"><a class="nav-link" href="{{ route('items.index') }}">الأصناف</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('stock_movements.index') }}">المخزون</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('customers.index') }}">الزباين</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('suppliers.index') }}">الموردين</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('purchases.index') }}">مشتريات</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('sales.index') }}">مبيعات</a></li>

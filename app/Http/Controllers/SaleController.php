@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Sale;
 use App\Models\SaleItem;
+use App\Models\Customer;
 use App\Models\Item;       // نحتاج لنموذج الصنف لتحديث المخزون
 use App\Http\Requests\StoreSaleRequest;
 use App\Http\Requests\UpdateSaleRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
 
 class SaleController extends Controller
 {
@@ -27,8 +29,9 @@ class SaleController extends Controller
      */
     public function create(): View
     {
-        $items = Item::all(); // لتعبئة قائمة الأصناف في النموذج
-        return view('sales.create', compact('items'));
+        $items = Item::all();
+        $customers = Customer::orderBy('name')->get();
+        return view('sales.create', compact('items', 'customers'));
     }
 
     /**
@@ -36,39 +39,69 @@ class SaleController extends Controller
      */
     public function store(StoreSaleRequest $request): RedirectResponse
     {
+        // dd($request->all());
         $validated = $request->validated();
 
         DB::beginTransaction();
         try {
-            // 1. إنشاء فاتورة البيع الرئيسية
+            // determine customer id/name
+            $customerId = $validated['customer_id'] ?? null;
+            if ($customerId) {
+                $customer = Customer::find($customerId);
+                $customerName = $customer ? $customer->name : ($validated['customer_name'] ?? 'عميل نقدي');
+            } else {
+                $customerName = $validated['customer_name'] ?? 'عميل نقدي';
+            }
+
+            // إنشاء فاتورة البيع الرئيسية
             $sale = Sale::create([
-                'customer_name' => $validated['customer_name'] ?? null,
+                'customer_id' => $customerId,
+                'customer_name' => $customerName,
                 'sale_date' => $validated['sale_date'],
                 'invoice_number' => $validated['invoice_number'] ?? null,
                 'total_amount' => $validated['total_amount'],
                 'discount_amount' => $validated['discount_amount'] ?? 0,
                 'final_amount' => $validated['final_amount'],
-                'payment_method' => $validated['payment_method'],
+                'payment_status' => $validated['payment_status'] ?? 'Not Paid',
+                'paid_amount' => $validated['paid_amount'] ?? 0,
                 'notes' => $validated['notes'] ?? null,
             ]);
 
-            // 2. إضافة الأصناف وتحديث المخزون
+            if ($request->has('add_to_balance') && $request->filled('customer_id')) {
+                $customer = Customer::findOrFail($request->customer_id);
+                $unpaidAmount = $request->final_amount - $request->paid_amount;
+                
+                if ($unpaidAmount > 0) {
+                    $customer->current_balance += $unpaidAmount;
+                    $customer->balance_type = 'Debit';
+                    $customer->save();
+                }
+            }
+
+            // إضافة الأصناف وتحديث المخزون
             foreach ($validated['items'] as $itemData) {
-                // حفظ تفاصيل الصنف في SaleItem
-                $sale->items()->create($itemData);
+                // map fields explicitly to avoid wrong keys / mass assignment issues
+                $saleItemData = [
+                    'item_id' => $itemData['item_id'],
+                    'quantity' => $itemData['quantity'],
+                    'unit_price' => $itemData['unit_price'],
+                    'sub_total' => $itemData['sub_total'],
+                ];
+
+                $sale->items()->create($saleItemData);
 
                 // تحديث كمية المخزون (خصم الكمية)
-                $item = Item::find($itemData['item_id']);
+                $item = Item::find($saleItemData['item_id']);
                 if ($item) {
-                    $item->stock_quantity -= $itemData['quantity'];
+                    $item->stock_quantity -= $saleItemData['quantity'];
                     $item->save();
 
-                    // ** إضافة سجل حركة المخزون **
+                    // سجل حركة المخزون
                     \App\Models\StockMovement::create([
                         'item_id' => $item->id,
                         'movement_date' => $validated['sale_date'],
                         'movement_type' => 'OUT',
-                        'quantity_change' => $itemData['quantity'],
+                        'quantity_change' => $saleItemData['quantity'],
                         'reference_type' => 'Sale',
                         'reference_id' => $sale->id,
                         'reason' => 'Sale Transaction',
@@ -78,17 +111,14 @@ class SaleController extends Controller
             }
 
             DB::commit();
-            // return redirect()->route('sales.index')
-                // ->with('success', 'تم تسجيل عملية البيع بنجاح وتحديث المخزون!');
 
-            // 4. التوجيه إلى صفحة الطباعة الحرارية
-            return redirect()->route('sales.print.thermal', $sale)->with('success', 'تم تسجيل عملية البيع بنجاح.');            
+            return redirect()->route('sales.print.thermal', $sale)->with('success', 'تم تسجيل عملية البيع بنجاح.');
         } catch (\Exception $e) {
             DB::rollBack();
-            // يجب تسجيل الخطأ هنا
+            Log::error('Sale store failed: '.$e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'فشل تسجيل عملية البيع. يرجى مراجعة التفاصيل.');
+                ->with('error', 'فشل تسجيل عملية البيع. راجع السجل (storage/logs/laravel.log).');
         }
     }
 
@@ -128,8 +158,9 @@ class SaleController extends Controller
     public function edit(Sale $sale): View
     {
         $items = Item::all();
-        $sale->load('items.item');
-        return view('sales.edit', compact('sale', 'items'));
+    $customers = Customer::orderBy('name')->get();
+    $sale->load('items.item');
+    return view('sales.edit', compact('sale', 'items', 'customers'));
     }
 
     /**

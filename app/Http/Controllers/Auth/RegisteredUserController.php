@@ -45,6 +45,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('/stock_movements.index', absolute: false));
+        return redirect(route('stock_movements', absolute: false));
     }
 }

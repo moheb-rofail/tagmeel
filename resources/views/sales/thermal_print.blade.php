@@ -24,7 +24,7 @@
         }
     </style>
 </head>
-<body onload="window.print();">
+<body  onload="printAndRedirect();">
     <div class="receipt-container">
         <header>
             <h1 class="store-name">{{ env('APP_NAME') }}</h1>
@@ -89,5 +89,13 @@
             <p>شكراً لتعاملكم معنا</p>
         </footer>
     </div>
+    <script>
+        function printAndRedirect() {
+            window.print();
+            window.onafterprint = function() {
+                window.location.href = '/sales'; // Change this to your homepage URL
+            };
+        }
+    </script>
 </body>
 </html>

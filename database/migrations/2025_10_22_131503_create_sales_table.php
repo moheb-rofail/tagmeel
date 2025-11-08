@@ -22,7 +22,6 @@ return new class extends Migration
             $table->decimal('discount_amount', 10, 2)->default(0.00);
             $table->decimal('final_amount', 10, 2);   // المبلغ النهائي بعد الخصم
 
-            $table->string('payment_method')->default('Cash');
             $table->text('notes')->nullable();
 
             $table->timestamps();
