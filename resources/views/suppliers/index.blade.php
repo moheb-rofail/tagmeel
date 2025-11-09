@@ -1,6 +1,6 @@
 <x-layout>
 
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto container-xl">
         <header class="mb-8 flex justify-between items-center">
             <h1 class="text-3xl font-extrabold text-gray-900">سجل الموردين</h1>
             <button onclick="document.getElementById('createModal').classList.remove('hidden')" 

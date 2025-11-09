@@ -49,7 +49,10 @@ class CustomerController extends Controller
     public function show(Customer $customer): View
     {
         // يمكن هنا تحميل سجلات المبيعات الآجلة للعميل
-        // $customer->load('sales');
+        // تحميل علاقة المدفوعات (CustomerPayments) مع ترتيبها تنازليًا حسب التاريخ
+        $customer->load(['payments' => function ($query) {
+            $query->orderBy('payment_date', 'desc')->orderBy('id', 'desc');
+        }]);
         return view('customers.show', compact('customer'));
     }
 

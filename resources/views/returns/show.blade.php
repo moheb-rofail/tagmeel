@@ -41,7 +41,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <strong>المبلغ المعكوس:</strong>
-                    <p class="h4 text-danger">{{ number_format($return->total_amount, 2) }} ر.س</p>
+                    <p class="h4 text-danger">{{ number_format($return->total_amount, 2) }} ج</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <strong>الحالة:</strong>
@@ -78,8 +78,8 @@
                         <tr>
                             <td>{{ $itemDetail->item->name ?? 'صنف محذوف' }}</td>
                             <td>{{ $itemDetail->quantity }}</td>
-                            <td>{{ number_format($itemDetail->unit_value, 2) }} ر.س</td>
-                            <td>{{ number_format($itemDetail->sub_total, 2) }} ر.س</td>
+                            <td>{{ number_format($itemDetail->unit_value, 2) }} ج</td>
+                            <td>{{ number_format($itemDetail->sub_total, 2) }} ج</td>
                         </tr>
                         @endforeach
                     </tbody>

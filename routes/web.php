@@ -9,6 +9,7 @@ use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\StockReturnController;
+use App\Http\Controllers\CustomerPaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -37,4 +38,9 @@ Route::get('stock-movements/item/{item}', [StockMovementController::class, 'item
 
 // مسار الطباعة الحرارية (استخدام اسم sale)
 Route::get('/sales/{sale}/print-thermal', [SaleController::class, 'printThermalSale'])->name('sales.print.thermal');
+
+// مسارات السداد: ربط صفحة السداد بصفحة العميل Show
+Route::get('customers/{customer}/pay', [CustomerPaymentController::class, 'create'])->name('customer_payments.create');
+Route::post('customer-payments', [CustomerPaymentController::class, 'store'])->name('customer_payments.store');
+
 require __DIR__.'/auth.php';

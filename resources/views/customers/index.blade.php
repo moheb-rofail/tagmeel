@@ -33,7 +33,7 @@
                                 <td>{{ $customer->name }}</td>
                                 <td>{{ $customer->phone ?? '-' }}</td>
                                 <td class="{{ $customer->current_balance > 0 ? ($customer->balance_type == 'Debit' ? 'text-danger' : 'text-success') : '' }}">
-                                    {{ number_format($customer->current_balance, 2) }} ر.س
+                                    {{ number_format($customer->current_balance, 2) }} ج
                                 </td>
                                 <td>
                                     @if ($customer->current_balance == 0)

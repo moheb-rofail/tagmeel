@@ -213,33 +213,48 @@ class SaleForm {
         if ($('#payment_status').val() === 'Paid') {
             $('#paid_amount').val(finalAmount.toFixed(2));
         }
+
+        // Ensure balance input/visibility is updated whenever totals change
+        this.syncPaidAmountVisibility();
     }
 
     syncPaidAmountVisibility() {
         const status = $('#payment_status').val();
         const finalAmount = parseFloat($('#final_amount').val()) || 0;
+        const paid = parseFloat($('#paid_amount').val()) || 0;
         const selectedCustomerId = $('#customer_select').val();
 
         switch(status) {
-            case 'Not Paid':
+            case 'Not Paid': {
                 $('#paid_amount').val(0).prop('readonly', true);
-                this.toggleBalanceField(!!selectedCustomerId);
+                // If a customer is selected, add the whole final amount to their balance
+                const amountToAdd = selectedCustomerId ? finalAmount : 0;
+                this.toggleBalanceField(amountToAdd);
                 break;
-            case 'Paid':
+            }
+            case 'Paid': {
                 $('#paid_amount').val(finalAmount.toFixed(2)).prop('readonly', true);
-                this.toggleBalanceField(false);
+                this.toggleBalanceField(0);
                 break;
-            case 'Partial':
+            }
+            case 'Partial': {
                 $('#paid_amount').prop('readonly', false);
-                this.toggleBalanceField(false);
+                // If a customer is selected, add the unpaid portion to their balance
+                const unpaid = Math.max(0, finalAmount - paid);
+                const amountToAdd = selectedCustomerId ? unpaid : 0;
+                this.toggleBalanceField(amountToAdd);
                 break;
+            }
         }
-    }
+    }       
 
-    toggleBalanceField(add) {
+    toggleBalanceField(amount) {
+        // remove any existing hidden field
         $('#add_to_balance').remove();
-        if (add) {
-            this.form.append('<input type="hidden" id="add_to_balance" name="add_to_balance" value="1">');
+        // only add the hidden input when we have a positive amount to add
+        if (amount && amount > 0) {
+            // send the unpaid amount to the server so backend can increment customer balance
+            this.form.append(`<input type="hidden" id="add_to_balance" name="add_to_balance" value="${amount.toFixed(2)}">`);
         }
     }
 
@@ -274,7 +289,7 @@ class SaleForm {
                         <option value="">اختر الصنف...</option>
                         @foreach($itemsList as $item)
                             <option value="{{ $item->id }}" data-price="{{ $item->selling_price }}">
-                                {{ $item->name }} ({{ number_format($item->selling_price, 2) }} ر.س)
+                                {{ $item->name }} ({{ number_format($item->selling_price, 2) }} ج)
                             </option>
                         @endforeach
                     </select>

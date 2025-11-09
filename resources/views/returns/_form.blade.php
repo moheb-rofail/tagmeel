@@ -29,14 +29,14 @@
             <optgroup label="مبيعات (لإرجاع المبيعات)">
                 @foreach($salesList as $sale)
                     <option value="{{ $sale->id }}" data-type="sale" {{ $selectedReference == $sale->id && $selectedType == 'sale' ? 'selected' : '' }}>
-                        بيع #{{ $sale->id }} - ({{ $sale->sale_date->format('Y-m-d') }}) - {{ number_format($sale->final_amount, 2) }} ر.س
+                        بيع #{{ $sale->id }} - ({{ $sale->sale_date->format('Y-m-d') }}) - {{ number_format($sale->final_amount, 2) }} ج
                     </option>
                 @endforeach
             </optgroup>
             <optgroup label="مشتريات (لإرجاع المشتريات)">
                 @foreach($purchasesList as $purchase)
                     <option value="{{ $purchase->id }}" data-type="purchase" {{ $selectedReference == $purchase->id && $selectedType == 'purchase' ? 'selected' : '' }}>
-                        شراء #{{ $purchase->id }} - ({{ $purchase->purchase_date->format('Y-m-d') }}) - {{ number_format($purchase->total_amount, 2) }} ر.س
+                        شراء #{{ $purchase->id }} - ({{ $purchase->purchase_date->format('Y-m-d') }}) - {{ number_format($purchase->total_amount, 2) }} ج
                     </option>
                 @endforeach
             </optgroup>

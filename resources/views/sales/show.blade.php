@@ -24,20 +24,17 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <strong>المبلغ الإجمالي (قبل الخصم):</strong>
-                    <p>{{ number_format($sale->total_amount, 2) }} ر.س</p>
+                    <p>{{ number_format($sale->total_amount, 2) }} ج</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <strong>الخصم:</strong>
-                    <p class="text-danger">{{ number_format($sale->discount_amount, 2) }} ر.س</p>
+                    <p class="text-danger">{{ number_format($sale->discount_amount, 2) }} ج</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <strong>المبلغ النهائي المستحق:</strong>
-                    <p class="h4 text-success">{{ number_format($sale->final_amount, 2) }} ر.س</p>
+                    <p class="h4 text-success">{{ number_format($sale->final_amount, 2) }} ج</p>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <strong>طريقة الدفع:</strong>
-                    <p>{{ $sale->payment_method }}</p>
-                </div>
+                
                 <div class="col-md-12 mb-3">
                     <strong>ملاحظات:</strong>
                     <p>{{ $sale->notes ?? 'لا توجد ملاحظات.' }}</p>
@@ -68,10 +65,10 @@
                         @foreach($sale->items as $itemDetail)
                         <tr>
                             <td>{{ $itemDetail->item->name ?? 'صنف محذوف' }}</td>
-                            <td>{{ number_format($itemDetail->item->selling_price ?? 0, 2) }} ر.س</td>
+                            <td>{{ number_format($itemDetail->item->selling_price ?? 0, 2) }} ج</td>
                             <td>{{ $itemDetail->quantity }}</td>
-                            <td>{{ number_format($itemDetail->unit_price, 2) }} ر.س</td>
-                            <td>{{ number_format($itemDetail->sub_total, 2) }} ر.س</td>
+                            <td>{{ number_format($itemDetail->unit_price, 2) }} ج</td>
+                            <td>{{ number_format($itemDetail->sub_total, 2) }} ج</td>
                         </tr>
                         @endforeach
                     </tbody>

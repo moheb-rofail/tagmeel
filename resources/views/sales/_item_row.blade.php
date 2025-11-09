@@ -15,7 +15,7 @@
             <option value="" disabled {{ is_null($selectedItem) ? 'selected' : '' }}>اختر الصنف...</option>
             @foreach($itemsList as $item)
                 <option value="{{ $item->id }}" data-price="{{ $item->selling_price }}" {{ $selectedItem == $item->id ? 'selected' : '' }}>
-                    {{ $item->name }} (سعر البيع الافتراضي: {{ number_format($item->selling_price, 2) }} ر.س)
+                    {{ $item->name }} (سعر البيع الافتراضي: {{ number_format($item->selling_price, 2) }} ج)
                 </option>
             @endforeach
         </select>

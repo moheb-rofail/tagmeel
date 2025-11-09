@@ -25,7 +25,7 @@
                             <th>العميل</th>
                             <th>المبلغ الإجمالي</th>
                             <th>المبلغ النهائي</th>
-                            <th>طريقة الدفع</th>
+                            <th>المبلغ المدفوع</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
@@ -38,7 +38,7 @@
                                 <td>{{ $sale->customer_name ?? 'عميل نقدي' }}</td>
                                 <td>{{ number_format($sale->total_amount, 2) }} ج.م</td>
                                 <td class="text-success fw-bold">{{ number_format($sale->final_amount, 2) }} ج.م</td>
-                                <td>{{ $sale->payment_method }}</td>
+                                <td>{{ number_format($sale->paid_amount, 2) }} ج.م</td>
                                 <td>
                                     <a href="{{ route('sales.show', $sale) }}" class="btn btn-sm btn-info ms-1">عرض</a>
                                     <a href="{{ route('sales.edit', $sale) }}" class="btn btn-sm btn-warning ms-1">تعديل</a>

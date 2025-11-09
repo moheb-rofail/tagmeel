@@ -50,7 +50,7 @@
                                     @endif
                                 </td>
                                 <td>{{ $return->customer_supplier_name ?? 'غير محدد' }}</td>
-                                <td class="text-danger">{{ number_format($return->total_amount, 2) }} ر.س</td>
+                                <td class="text-danger">{{ number_format($return->total_amount, 2) }} ج</td>
                                 <td>
                                     <span class="badge bg-secondary">{{ __($return->status) }}</span>
                                 </td>

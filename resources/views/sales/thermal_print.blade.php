@@ -73,10 +73,7 @@
                 <span>المبلغ النهائي:</span>
                 <span>{{ number_format($sale->final_amount, 2) }}</span>
             </p>
-            <p>
-                <span>طريقة الدفع:</span>
-                <span>{{ $sale->payment_method }}</span>
-            </p>
+            
         </section>
 
         @if($sale->notes)
